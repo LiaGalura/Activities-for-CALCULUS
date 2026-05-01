@@ -1,0 +1,146 @@
+import sympy as sp
+
+sp.init_printing()  # enables pretty math output
+
+x = sp.symbols('x')
+y = sp.Function('y')(x)
+
+# ---------------- 1. PRODUCT RULE ----------------
+print("\n=== 1. PRODUCT RULE ===")
+
+u = 2*x**2 + 3*x
+v = x**3 - 1
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), u*v))
+
+du = sp.diff(u, x)
+dv = sp.diff(v, x)
+
+print("\nUsing Product Rule: (uv)' = u'v + uv'")
+print("u' ="); sp.pprint(du)
+print("v' ="); sp.pprint(dv)
+
+dy1 = du*v + u*dv
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy1)))
+
+
+# ---------------- 2. QUOTIENT RULE ----------------
+print("\n=== 2. QUOTIENT RULE ===")
+
+u = x**2 + 1
+v = x**3 - x
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), u/v))
+
+du = sp.diff(u, x)
+dv = sp.diff(v, x)
+
+print("\nUsing Quotient Rule: (u/v)' = (u'v - uv') / v^2")
+print("u' ="); sp.pprint(du)
+print("v' ="); sp.pprint(dv)
+
+dy2 = (du*v - u*dv)/v**2
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy2)))
+
+
+# ---------------- 3. CHAIN RULE ----------------
+print("\n=== 3. CHAIN RULE ===")
+
+inner = 4*x**2 - 5
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), inner**3))
+
+d_inner = sp.diff(inner, x)
+
+print("\nUsing Chain Rule: (f(g(x)))' = f'(g(x))g'(x)")
+print("Inner derivative ="); sp.pprint(d_inner)
+
+dy3 = 3*(inner**2)*d_inner
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy3)))
+
+
+# ---------------- 4a. EXPONENTIAL ----------------
+print("\n=== 4a. EXPONENTIAL ===")
+
+inner = 2*x**2
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), sp.exp(inner)))
+
+d_inner = sp.diff(inner, x)
+
+print("\nUsing: (e^u)' = u'e^u")
+print("Inner derivative ="); sp.pprint(d_inner)
+
+dy4a = d_inner * sp.exp(inner)
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy4a)))
+
+
+# ---------------- 4b. LOGARITHMIC ----------------
+print("\n=== 4b. LOGARITHMIC ===")
+
+inner = x**2 + 3*x + 1
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), sp.log(inner)))
+
+d_inner = sp.diff(inner, x)
+
+print("\nUsing: (ln u)' = u'/u")
+print("Inner derivative ="); sp.pprint(d_inner)
+
+dy4b = d_inner / inner
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy4b)))
+
+
+# ---------------- 5. COMBINED RULES ----------------
+print("\n=== 5. COMBINED RULES ===")
+
+f5 = (x**2 + 1)**3 / sp.sqrt(2*x + 5)
+
+print("Given:")
+sp.pprint(sp.Eq(sp.Symbol('y'), f5))
+
+print("\nRewrite as product:")
+sp.pprint((x**2 + 1)**3 * (2*x + 5)**(-sp.Rational(1,2)))
+
+print("\nApply Product + Chain Rules:")
+
+dy5 = sp.diff(f5, x)
+
+print("\nTherefore:")
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy5)))
+
+
+# ---------------- 6. IMPLICIT DIFFERENTIATION ----------------
+print("\n=== 6. IMPLICIT DIFFERENTIATION ===")
+
+y = sp.Function('y')(x)
+eq = x**2 + x*y + y**2 - 7
+
+print("Given:")
+sp.pprint(sp.Eq(x**2 + x*y + y**2, 7))
+
+print("\nDifferentiate both sides:")
+
+d_eq = sp.diff(eq, x)
+sp.pprint(d_eq)
+
+dy6 = sp.solve(d_eq, sp.diff(y, x))[0]
+
+print("\nSolve for dy/dx:")
+
+sp.pprint(sp.Eq(sp.Symbol("dy/dx"), sp.simplify(dy6)))
